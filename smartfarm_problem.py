@@ -1,6 +1,39 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""
+[Smart Tomato Farm Problem]
+
+    Tomato farm is divided into 10 areas which have it own exclusive sprinkler (1 area 1 sprinkler). We
+    assume the sprinkler can freely adjust the irrigation area based on the sprinkler head. now
+    the problem is the water tank can only support 40 L/min of total irrigation output.
+    In other words we can't execute the all sprinklers at the same time...
+
+    #####################
+    # 0 # 1 # 2 # 3 # 4 #
+    #####################   Area partition
+    # 5 # 6 # 7 # 8 # 9 #
+    #####################
+
+    To solve this problem, we will imagine our sprinkler execution sequence as a knapsack problem.
+    1. Imagine sprinkler output specification and (output specification)/cost as item weight and value
+    2. Imagine supported water tank output as knapsack weight limit
+    3. Based on the knapsack weight limit, find the item(s) to be included. Minus selected items with 
+       the number of area partition. This will be our first round of executions.
+    4. Repeat step 3 for the second, third and so on for the execution round until the number of area
+       partition is 0.
+
+    From the hard coded sprinklers selection, we will get;
+
+        ROUND 1: [('sprinkler_01', 10, 5), ('sprinkler_02', 10, 5), ('sprinkler_07', 9, 2), ('sprinkler_16', 10, 5)]
+        ROUND 2: [('sprinkler_05', 13, 4), ('sprinkler_11', 13, 3), ('sprinkler_19', 13, 6)]
+        ROUND 3: [('sprinkler_03', 20, 6), ('sprinkler_20', 18, 3)]
+        ROUND 4: [('sprinkler_15', 15, 3)]
+
+    which mean, this program choose the best value versus specification we can get and at the same time
+    it arrange the sprinklers order of execution to abide the water tank output specification.
+
+"""
 # cache to memoize (memoization) the result 
 cache = {}
 
@@ -54,12 +87,12 @@ if __name__ == '__main__':
     # number of farm partition
     farm_partition = 10
 
-    # actuator name, specification, specification/cost
+    # list of actuators (name, specification, specification/cost)
     actuators = (
                 ("sprinkler_01", 10, 5), ("sprinkler_02", 10, 5),
                 ("sprinkler_03", 20, 6), ("sprinkler_04", 15, 1),
                 ("sprinkler_05", 13, 4), ("sprinkler_06", 14, 3),
-                ("sprinkler_07", 9, 2), ("sprinkler_08", 20, 5),
+                ("sprinkler_07",  9, 2), ("sprinkler_08", 20, 5),
                 ("sprinkler_09", 23, 3), ("sprinkler_10", 25, 5),
                 ("sprinkler_11", 13, 3), ("sprinkler_12", 16, 2),
                 ("sprinkler_13", 10, 1), ("sprinkler_14", 30, 2),
@@ -78,7 +111,6 @@ if __name__ == '__main__':
     # as long there is remaining partition
     while (farm_partition != 0):
 
-        # show n round
         print ("\nROUND %s\n" %(counter + 1))
         # compute the result
         result = list(solve(actuators, specification_limit))
