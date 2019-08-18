@@ -9,11 +9,13 @@
     the problem is the water tank can only support 40 L/min of total irrigation output.
     In other words we can't execute the all sprinklers at the same time...
 
-    #####################
-    # 0 # 1 # 2 # 3 # 4 #
-    #####################   Area partition
-    # 5 # 6 # 7 # 8 # 9 #
-    #####################
+    #########
+    # 0 # 1 #
+    #########                   Partitioned farm area
+    # 3 # 4 #
+    #########################
+        # 5 # 6 # 7 # 8 # 9 #
+        #####################
 
     To solve this problem, we will imagine our sprinkler execution sequence as a knapsack problem.
     1. Imagine sprinkler output specification and (output specification)/cost as item weight and value
@@ -144,7 +146,6 @@ if __name__ == '__main__':
     watertank_output = 40
     # number of farm partition
     farm_partition = 10
-
     # list of actuators (name, specification, specification/cost)
     actuators = (
                 ("sprinkler_01", 10, 5), ("sprinkler_02", 10, 5),
@@ -158,6 +159,8 @@ if __name__ == '__main__':
                 ("sprinkler_17", 23, 5), ("sprinkler_18", 22, 4),
                 ("sprinkler_19", 13, 6), ("sprinkler_20", 18, 3),
     )
+    print ("\n10 actuators are choosen from list and the execution order is automated")
+    print ("while adhering the 40 L/min water tank limit based on knapsack problem.")
 
     ##############################################################
 
@@ -166,7 +169,7 @@ if __name__ == '__main__':
     # compute the solution
     solution = sequencing_order(actuators, farm_partition, watertank_output)
     # show the solution in aggregated way
-    print ("\nAggregated sequence:\n")
+    print ("\nAggregated actuators sequence:\n")
 
     # for every actuator listed in the solution
     for x in solution:
