@@ -5,37 +5,37 @@
 [Smart Tomato Farm Problem]
 
     Tomato farm is divided into 10 areas which have it own exclusive sprinkler (1 area 1 sprinkler). We
-    assume the sprinkler can freely adjust the irrigation area based on the sprinkler head. Now
-    the problem is the water tank can only support 40 L/min of total irrigation output.
-    In other words we can't execute the all sprinklers at the same time...
+    assume the sprinkler can freely adjust the irrigation area based on the sprinkler head. now
+    the problem is the water tank can only support 40 L/min of total irrigation output (in 
+    other words we can't execute the all sprinklers at the same time), and there is 
+    a list of sprinklers to be choosen from. How to simplify this problems?
 
-    #########
-    # 0 # 1 #
-    #########                   Partitioned farm area
-    # 3 # 4 #
-    #########################
-        # 5 # 6 # 7 # 8 # 9 #
-        #####################
+    #####################
+    # 0 # 1 # 2 # 3 # 4 #
+    #####################   Area partition
+    # 5 # 6 # 7 # 8 # 9 #
+    #####################
 
     To solve this problem, we will imagine our sprinkler execution sequence as a knapsack problem.
-    1. Imagine sprinkler output specification and (output specification)/cost as item weight and value
-    2. Imagine supported water tank output as knapsack weight limit
-    3. Based on the knapsack weight limit, find the item(s) to be included. Minus selected items with 
-       the number of area partition. This will be our first round of executions.
-    4. Repeat step 3 for the second, third and so on for the execution round until the number of area
-       partition is 0.
+
+        1. Imagine sprinkler output specification and (output specification)/cost as item weight
+           and value.
+        2. Imagine supported water tank output as knapsack weight limit.
+        3. Based on the knapsack weight limit, find the item(s) that need to be included and
+           minus selected items with the number of area partition. This will be our first
+           round of executions.
+        4. Repeat step 3 for the second, third and so on for the execution round until the
+           number of area partition is 0.
 
     From the hard coded sprinklers selection, we will get;
 
-        Aggregated sequence:
+        ROUND 1: [('sprinkler_01', 10, 5), ('sprinkler_02', 10, 5), ('sprinkler_07', 9, 2), ('sprinkler_16', 10, 5)]
+        ROUND 2: [('sprinkler_05', 13, 4), ('sprinkler_11', 13, 3), ('sprinkler_19', 13, 6)]
+        ROUND 3: [('sprinkler_03', 20, 6), ('sprinkler_20', 18, 3)]
+        ROUND 4: [('sprinkler_15', 15, 3)]
 
-        Step 1: [('sprinkler_01', 10, 5), ('sprinkler_02', 10, 5), ('sprinkler_07', 9, 2), ('sprinkler_16', 10, 5)]
-        Step 2: [('sprinkler_05', 13, 4), ('sprinkler_11', 13, 3), ('sprinkler_19', 13, 6)]
-        Step 3: [('sprinkler_03', 20, 6), ('sprinkler_20', 18, 3)]
-        Step 4: [('sprinkler_15', 15, 3)]
-
-    which mean, this program choose the best specification versus value we can get and at the same time
-    it arrange the sprinklers order of execution step to abide the water tank output limitation.
+    which mean, this program choose the best value versus specification we can get and at the same time
+    it arrange the sprinklers order of execution to abide the water tank output specification.
 
 """
 # cache to memoize (memoization) the result 
